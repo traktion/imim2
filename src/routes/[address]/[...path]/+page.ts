@@ -1,5 +1,7 @@
 import type { PageLoad } from './$types';
 
+export const ssr = false;
+
 export const load: PageLoad = async ({ params, fetch }) => {
   const { address, path } = params as { address: string; path: string };
   const url = `http://${address}/${path}`;
