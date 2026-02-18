@@ -19,6 +19,14 @@ Then ensure that a larger, bolder, font is used for h1, with progressively light
 And the fonts are given a modern, sharp, look and feel that isn't too business oriented, but not overly playful
 And appropriate spacing/padding/margins are used to separate the text neatly
 
+Given embedded images should render inline
+When images are included in articles
+Then the binary data should be directly served to the client
+And not wrapped in a HTML page
+And only /[address]/[*.md] files should be wrapped in HTML pages
+And other images URLs such as /[address]/[*.(jpg|png|gif)] should be served directly
+And images should still be retrieved from the same backend URLs as before (e.g. http://[address]/[image.png], etc)
+
 Implementation Notes
 
 - Increment patch version in /package.json
