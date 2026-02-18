@@ -2,10 +2,9 @@ import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params, fetch }) => {
-  const { address, path, file } = params as { address: string; path?: string; file: string };
+  const { address, path } = params as { address: string; path: string };
 
-  const fullPath = path ? `${path}/${file}` : file;
-  const backendUrl = `http://${address}/${fullPath}`;
+  const backendUrl = `http://${address}/${path}`;
   const res = await fetch(backendUrl);
   
   if (!res.ok) {
