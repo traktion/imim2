@@ -1,1 +1,121 @@
-- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
+As a software engineer
+I want to create the foundation for a blogging platform on Autonomi using AntTP
+So that IMIM blogs can be viewed on either IMIM or IMIM 2.0
+
+Given IMIM 2.0 is a web application running on AntTP
+When setting up the application
+Then use Svelte as the UI framework
+And use Typescript as the programming language
+And use Tailwind CSS for styling
+And do not use server side code (as AntTP REST endpoints will be used as a backend)
+
+Given IMIM 2.0 is a blogging application that reads Autonomi archives over AntTP
+When building the application
+Then it should have a blog home page route for a blog which lists all of the article titles and includes a preview of the article
+And it should have an blog article page route for showing the article in full
+And it should have a blog publish page route for creating new blog articles
+
+Given AntTP is a proxy which manages DNS / host name resolution
+When setting the host name for the application
+Then use http://imim2 as the home URL/route when not accessing the application using localhost
+
+Given the blog home page should be a unique URL
+When a user navigates to a blog home page
+Then the URL should include the blog address/name, e.g. http://imim2/traktion/ (PNR) or http://imim2/973e2c4f385af7bfac693aeaa9ee2525034c1534e468a204f8d9654f83667e0a/ (mutable address)
+And the blog address/name should be used to retrieve the blog listing
+And GET http://{address}/ (e.g. http://traktion/) should be used to retrieve the blog listing
+
+Given the blog article page should be a unique URL
+When a user navigates to a blog article page
+Then the URL should include the blog address/name and the file name, e.g. http://imim2/traktion/article.md (PNR) or http://imim2/973e2c4f385af7bfac693aeaa9ee2525034c1534e468a204f8d9654f83667e0a/article.md (mutable address)
+And the blog address/name and file name should be used to retrieve the blog article
+And GET http://{address}/{path} (e.g. http://traktion/article.md) should be used to retrieve the blog article
+And blog articles will be in markdown format
+
+Given blog articles will be in markdown format
+When rendering an article or article preview
+Then the article content must be converted to HTML using a library (try mdsvex for svelte)
+And render embedded pictures, videos or audio
+And render any links
+
+Given the create new blog article page should be a unique URL
+When a user navigates to a the create blog article page
+Then the URL should include the blog address/name and an article name, e.g. http://imim2/traktion/create
+And the page should include an article name, which will be converted into a dash-separated-file-name.md (note markdown md extension)
+And the page should render a WYSIWYG editor which saves to markdown format as the blog article content
+And if additional assets need uploading through the form (images, videos, audio, etc) then also submit in the multipart request 
+And PUT /anttp-0/multipart/archive/{address}/{path} should be to create the message (see http://localhost:18888/swagger-ui/#/archive_controller/put_archive) or see Postman definition below.
+
+Given this is a foundation for the application
+When constructing the IMIM 2.0 application
+Then ensure that the routes are present and working
+And a standard Svelte file/module format should be used
+And the application can build and run any tests
+And the application can be accessed through a local test HTTP server
+And the local test HTTP server proxies AntTP links (for blog listings and articles) correctly to the URLs provided
+
+Implementation Notes
+
+- IMIM 1.0 repository is available at https://github.com/traktion/imim-blog to understand the flows/architecture
+- See AntTP documentation (PNR, mutable addresses, immutable addresses, pointers) at https://github.com/traktion/AntTP
+- Unit test modules where applicable
+
+Blog listing example (JSON):
+
+URL: http://{address}/
+Headers: 
+  Accept: application/json
+
+```
+[
+   {"name": "./", "type": "DIRECTORY", "mtime": "1970-01-01T00:00:01+00:00", "size": "0"},
+   {"name": "streaming-on-autonomi.md", "type": "FILE", "mtime": "1970-01-01T00:00:02+00:00", "size": "1139"},
+   {"name": "dog-food-is-delicious.md", "type": "FILE", "mtime": "1970-01-01T00:00:10+00:00", "size": "4293"}
+]
+```
+
+Postman definition to create article:
+
+URL: /anttp-0/multipart/archive/{address}/{path} 
+Headers:
+  x-store-type: disk
+
+```
+{
+	"name": "Update Archive Unified",
+	"request": {
+		"method": "PUT",
+		"header": [
+			{
+				"key": "x-store-type",
+				"value": "disk",
+				"type": "text"
+			}
+		],
+		"body": {
+			"mode": "formdata",
+			"formdata": [
+				{
+					"key": "files",
+					"type": "text",
+					"value": "updated content",
+					"contentType": "text/plain"
+				}
+			]
+		},
+		"url": {
+			"raw": "{{base_url}}/anttp-0/multipart/archive/{{address}}",
+			"host": [
+				"{{base_url}}"
+			],
+			"path": [
+				"anttp-0",
+				"multipart",
+				"archive",
+				
+				"{{address}}"
+			]
+		}
+	}
+}
+```
