@@ -26,7 +26,7 @@
     }
   });
 
-  $: html = isMarkdown ? marked.parse(content) : content;
+  $: html = isMarkdown ? marked.parse(content) : '';
 </script>
 
 <div class="py-8 first:pt-0 border-b border-sky-100 last:border-b-0">

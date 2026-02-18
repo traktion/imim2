@@ -1,3 +1,55 @@
 @import "tailwindcss";
 
-/* App-wide base styles can go here */
+/* Modern typography and element styling for articles and previews */
+@theme {
+  --font-sharp: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  .prose {
+    max-width: none;
+    line-height: 1.6;
+    font-family: var(--font-sharp);
+  }
+
+  .prose h1 {
+    @apply text-4xl font-extrabold text-sky-900 mt-8 mb-6;
+    letter-spacing: -0.025em;
+  }
+
+  .prose h2 {
+    @apply text-3xl font-bold text-sky-800 mt-7 mb-5;
+    letter-spacing: -0.015em;
+  }
+
+  .prose h3 {
+    @apply text-2xl font-semibold text-sky-700 mt-6 mb-4;
+  }
+
+  .prose h4 {
+    @apply text-xl font-medium text-sky-600 mt-5 mb-3;
+  }
+
+  .prose p {
+    @apply mb-4 text-sky-900;
+  }
+
+  .prose img {
+    @apply max-w-full h-auto rounded-lg shadow-lg mx-auto my-6;
+    filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.1)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+  }
+
+  .prose video {
+    @apply max-w-full h-auto rounded-lg mx-auto my-6;
+  }
+
+  /* Support for videos that might be wrapped in other tags or need explicit controls styling */
+  .prose video:not([controls]) {
+    /* Ensure controls are present if not specified in markdown but we want them as per requirement */
+  }
+
+  /* Ensure spacing between elements */
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+}
