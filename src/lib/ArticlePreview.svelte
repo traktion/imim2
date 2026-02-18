@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { marked } from 'marked';
+  import { rewriteUrls } from './utils';
 
   export let address: string;
   export let item: { name: string; type: string };
@@ -26,7 +27,7 @@
     }
   });
 
-  $: html = isMarkdown ? marked.parse(content) : '';
+  $: html = isMarkdown ? rewriteUrls(marked.parse(content), address, item.name) : '';
 </script>
 
 <div class="py-8 first:pt-0 border-b border-sky-100 last:border-b-0">

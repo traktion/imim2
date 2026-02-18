@@ -34,3 +34,4 @@ Implementation Notes
 - Unit test modules where applicable
 - Article URLs to the backend are in this format: http://[address]/[article.md]
 - Content which is not a markdown/*.md file should not be converted from markdown to HTML and should be rendered as served
+- Further discussion was had and the only way to directly service images is to intercept relative image URLs and serve them directly from the backend

@@ -1,9 +1,10 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import { marked } from 'marked';
+  import { rewriteUrls } from '$lib/utils';
   export let data: PageData & { error?: string };
   $: isMarkdown = data.path.endsWith('.md');
-  $: html = isMarkdown ? marked.parse(data.markdown ?? '') : '';
+  $: html = isMarkdown ? rewriteUrls(marked.parse(data.markdown ?? ''), data.address, data.path) : '';
 </script>
 
 <div class="min-h-screen bg-white text-sky-700 p-6 prose max-w-none">
