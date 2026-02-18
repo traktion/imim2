@@ -10,7 +10,7 @@
   {:else if data.listing?.length}
     <div class="space-y-4">
       {#each data.listing as item}
-        {#if item.type === 'FILE'}
+        {#if item.type === 'FILE' && item.name.endsWith('.md')}
           <ArticlePreview address={data.address} {item} />
         {/if}
       {/each}

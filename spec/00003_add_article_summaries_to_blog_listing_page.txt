@@ -21,6 +21,11 @@ And render any images inline
 And render any media controls for media (audio, video)
 And render any links to other pages/sites
 
+Given the article listing page should only show articles
+When retreiving the article listing
+Then only show previews of articles which are markdown/*.md files
+And do include inline images/media/links in the article previews
+
 Implementation Notes
 
 - Increment patch version in /package.json
