@@ -1,0 +1,44 @@
+As a blog viewer
+I want be able to see previews of all articles in the blog
+So that I can read a brief summary and then click through to read more
+
+Given the blog article listing page is at the /[address]/ route
+When rendering the blog article page
+Then retrieve each article using a relative URL to the [address] with item.name (which is a path) appended
+And the URL called in the backend will be http://[address]/[article.md]
+
+Given there only needs to be a preview of each blog article
+When rendering an article preview
+Then only show 750f the page height for each preview
+And provide a link to "Read Full Article" which links to the /[address]/[path] route
+And load each article asynchronously, with a loading icon placeholder while waiting for the server to respond
+And don't show the bullets against each article, but do use a subtle separator for each article
+
+Given the contents of a blog article is in markdown format
+When rendering an article preview
+Then convert the markdown to HTML
+And render any images inline
+And render any media controls for media (audio, video)
+And render any links to other pages/sites
+
+Implementation Notes
+
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
+- Unit test modules where applicable
+- Article URLs to the backend are in this format: http://[address]/[article.md]
+- Content which is not a markdown/*.md file should not be converted from markdown to HTML and should be rendered as served
+
+Blog listing example (JSON):
+
+URL: http://{address}/
+Headers: 
+  Accept: application/json
+
+```
+[
+   {"name": "./", "type": "DIRECTORY", "mtime": "1970-01-01T00:00:01+00:00", "size": "0"},
+   {"name": "streaming-on-autonomi.md", "type": "FILE", "mtime": "1970-01-01T00:00:02+00:00", "size": "1139"},
+   {"name": "dog-food-is-delicious.md", "type": "FILE", "mtime": "1970-01-01T00:00:10+00:00", "size": "4293"}
+]
+```
