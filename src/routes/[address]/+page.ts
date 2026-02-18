@@ -2,8 +2,12 @@ import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params, fetch }) => {
   const address = params.address;
-  const url = `http://${address}/index.json`;
-  const res = await fetch(url);
+  const url = `http://${address}/`;
+  const res = await fetch(url, {
+    headers: {
+      'Accept': 'application/json'
+    }
+  });
   if (!res.ok) {
     return { address, listing: [], error: `Failed to fetch listing (${res.status})` };
   }
