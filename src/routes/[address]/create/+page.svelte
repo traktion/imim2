@@ -32,16 +32,16 @@
   <h1 class="text-2xl font-semibold">Create Article</h1>
   <form class="space-y-3" on:submit|preventDefault={submit}>
     <div>
-      <label class="block text-sm">Address</label>
-      <input class="border p-2 w-full" bind:value={address} placeholder="traktion" required />
+      <label class="block text-sm" for="address">Address</label>
+      <input id="address" class="border p-2 w-full" bind:value={address} placeholder="traktion" required />
     </div>
     <div>
-      <label class="block text-sm">Path</label>
-      <input class="border p-2 w-full" bind:value={path} placeholder="posts/hello.md" required />
+      <label class="block text-sm" for="path">Path</label>
+      <input id="path" class="border p-2 w-full" bind:value={path} placeholder="posts/hello.md" required />
     </div>
     <div>
-      <label class="block text-sm">Markdown</label>
-      <textarea class="border p-2 w-full h-64" bind:value={content} placeholder="# Hello\nBody..." required></textarea>
+      <label class="block text-sm" for="markdown">Markdown</label>
+      <textarea id="markdown" class="border p-2 w-full h-64" bind:value={content} placeholder="# Hello\nBody..." required></textarea>
     </div>
     <button class="bg-sky-600 text-white px-4 py-2 rounded" type="submit">Publish</button>
   </form>
