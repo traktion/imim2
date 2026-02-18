@@ -1,0 +1,37 @@
+As a blog viewer
+I want the articles and article previews to be styled neatly with titles, sub-titles and body text
+So that I can easily see each separate part of the article and the main text remains readable
+
+Given images may be embedded within previews or articles
+When rendering
+Then ensure that images are resized to only fit within the article space
+And add a drop shadow to emphasise the edges of the image
+
+Given videos may be embedded within previews or articles
+When rendering
+Then ensure that videos are resized to only fit within the article space
+And do not auto-start or auto-download (as they may be large)
+And include media controls to play, stop, pause, etc
+
+Given there are multiple levels of titles (h1, h2, h3, h4, etc)
+When rendering
+Then ensure that a larger, bolder, font is used for h1, with progressively lighter and smaller fonts for h2 to h4
+And the fonts are given a modern, sharp, look and feel that isn't too business oriented, but not overly playful
+And appropriate spacing/padding/margins are used to separate the text neatly
+
+Given embedded images should render inline
+When images are included in articles
+Then the binary data should be directly served to the client
+And not wrapped in a HTML page
+And only /[address]/[*.md] files should be wrapped in HTML pages
+And other images URLs such as /[address]/[*.(jpg|png|gif)] should be served directly
+And images should still be retrieved from the same backend URLs as before (e.g. http://[address]/[image.png], etc)
+
+Implementation Notes
+
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
+- Unit test modules where applicable
+- Article URLs to the backend are in this format: http://[address]/[article.md]
+- Content which is not a markdown/*.md file should not be converted from markdown to HTML and should be rendered as served
+- Further discussion was had and the only way to directly service images is to intercept relative image URLs and serve them directly from the backend
