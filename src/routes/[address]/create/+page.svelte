@@ -43,6 +43,7 @@ Images: ![alt](http://traktion/markdown-article.png)`;
       const uploadRes = await fetch(`/anttp-0/multipart/archive/${immutableAddress}/${encodeURIComponent(path)}`, {
         method: 'PUT',
         headers: {
+          'Accept': 'application/json',
           'x-store-type': 'disk'
         },
         body: fd
