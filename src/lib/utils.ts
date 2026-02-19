@@ -26,13 +26,27 @@ export function rewriteUrls(html: string, address: string, currentPath: string =
     }
   );
 
-  // Handle video/audio embeddings
+  // Handle video/audio embeddings for both links and images
   const videoExtensions = ['mp4', 'mov', 'avi', 'wmv', 'webm', 'mkv'];
   const audioExtensions = ['mp3', 'wav', 'flac', 'ogg'];
 
-  const finalHtml = rewrittenHtml.replace(
+  let finalHtml = rewrittenHtml.replace(
     /<a href="(http:\/\/[^"]+\.([^".]+))">([^<]*)<\/a>/gi,
     (match, url, ext, text) => {
+      const lowerExt = ext.toLowerCase();
+      if (videoExtensions.includes(lowerExt)) {
+        return `<video src="${url}" controls class="w-full h-auto my-4"></video>`;
+      }
+      if (audioExtensions.includes(lowerExt)) {
+        return `<audio src="${url}" controls class="w-full my-4"></audio>`;
+      }
+      return match;
+    }
+  );
+
+  finalHtml = finalHtml.replace(
+    /<img [^>]*src="(http:\/\/[^"]+\.([^".]+))"[^>]*>/gi,
+    (match, url, ext) => {
       const lowerExt = ext.toLowerCase();
       if (videoExtensions.includes(lowerExt)) {
         return `<video src="${url}" controls class="w-full h-auto my-4"></video>`;
