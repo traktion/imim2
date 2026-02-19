@@ -3,10 +3,10 @@
  * 
  * For example, if address is 'traktion', <img src="pic.jpg"> becomes <img src="http://traktion/pic.jpg">
  */
-export function rewriteUrls(html: string, address: string, currentPath: string = ''): string {
+export function rewriteUrls(html: string, address: string, currentPath: string = '', articleLink: string = ''): string {
   // Simple regex for src and href attributes that don't already have a protocol
   // This handles common cases like src="image.png", src="./image.png", src="/image.png"
-  return html.replace(
+  const rewrittenHtml = html.replace(
     /(src|href)=["'](?!https?:\/\/)([^"']+)["']/g,
     (match, attr, url) => {
       // If it's an absolute path from the root, like /logo.png
@@ -25,4 +25,42 @@ export function rewriteUrls(html: string, address: string, currentPath: string =
       return `${attr}="http://${address}/${prefix}${cleanedUrl}"`;
     }
   );
+
+  // Handle video/audio embeddings for both links and images
+  const videoExtensions = ['mp4', 'mov', 'avi', 'wmv', 'webm', 'mkv'];
+  const audioExtensions = ['mp3', 'wav', 'flac', 'ogg'];
+
+  let finalHtml = rewrittenHtml.replace(
+    /<a href="(http:\/\/[^"]+\.([^".]+))">([^<]*)<\/a>/gi,
+    (match, url, ext, text) => {
+      const lowerExt = ext.toLowerCase();
+      if (videoExtensions.includes(lowerExt)) {
+        return `<video src="${url}" controls class="w-full h-auto my-4"></video>`;
+      }
+      if (audioExtensions.includes(lowerExt)) {
+        return `<audio src="${url}" controls class="w-full my-4"></audio>`;
+      }
+      return match;
+    }
+  );
+
+  finalHtml = finalHtml.replace(
+    /<img [^>]*src="(http:\/\/[^"]+\.([^".]+))"[^>]*>/gi,
+    (match, url, ext) => {
+      const lowerExt = ext.toLowerCase();
+      if (videoExtensions.includes(lowerExt)) {
+        return `<video src="${url}" controls class="w-full h-auto my-4"></video>`;
+      }
+      if (audioExtensions.includes(lowerExt)) {
+        return `<audio src="${url}" controls class="w-full my-4"></audio>`;
+      }
+      return match;
+    }
+  );
+
+  if (articleLink) {
+    return finalHtml.replace(/<h1>(.*?)<\/h1>/gi, `<h1><a href="${articleLink}">$1</a></h1>`);
+  }
+
+  return finalHtml;
 }

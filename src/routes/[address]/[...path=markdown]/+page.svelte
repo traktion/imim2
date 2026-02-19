@@ -7,13 +7,15 @@
   $: html = isMarkdown ? rewriteUrls(marked.parse(data.markdown ?? ''), data.address, data.path) : '';
 </script>
 
-<div class="min-h-screen bg-white text-sky-700 p-6 prose max-w-none">
+<div class="prose max-w-none text-sky-900">
   {#if data.error}
     <p class="text-red-600">{data.error}</p>
   {/if}
   
   {#if isMarkdown}
-    {@html html}
+    <div class="media-container">
+      {@html html}
+    </div>
   {:else}
     <pre class="whitespace-pre-wrap">{data.markdown}</pre>
   {/if}

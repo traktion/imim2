@@ -27,7 +27,12 @@
     }
   });
 
-  $: html = isMarkdown ? rewriteUrls(marked.parse(content), address, item.name) : '';
+  $: html = isMarkdown ? rewriteUrls(
+    marked.parse(content),
+    address,
+    item.name,
+    `/${address}/${item.name}`
+  ) : '';
 </script>
 
 <div class="py-8 first:pt-0 border-b border-sky-100 last:border-b-0">
@@ -41,7 +46,9 @@
     {:else}
       <div class="prose max-w-none text-sky-900">
         {#if isMarkdown}
-          {@html html}
+          <div class="media-container">
+            {@html html}
+          </div>
         {:else}
           <pre class="whitespace-pre-wrap">{content}</pre>
         {/if}

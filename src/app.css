@@ -35,12 +35,12 @@
   }
 
   .prose img {
-    @apply max-w-full h-auto rounded-lg shadow-lg mx-auto my-6;
+    @apply w-full h-auto rounded-lg shadow-lg mx-auto my-6;
     filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.1)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
   }
 
   .prose video {
-    @apply max-w-full h-auto rounded-lg mx-auto my-6;
+    @apply w-full h-auto rounded-lg mx-auto my-6;
   }
 
   /* Support for videos that might be wrapped in other tags or need explicit controls styling */

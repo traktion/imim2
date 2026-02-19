@@ -1,0 +1,31 @@
+As a blog viewer
+I want to be able to navigate between different pages in the blog using a menu and also play embedded videos/audio
+So that I can easily hop from viewing the article previews, to viewing an article, to creating a new article
+
+Given there are 3 distinct pages (article preview, view article, create article) that need to be navigated between
+When rendering the application
+Then render a menu at the top all pages, spanning the full width of the browser, with the menu items towards the left hand side
+And highlight the active page link in a darker colour to show which page is being shown
+And the sections should be named Home, Article and Publish (for article preview, view article and create article respectively)
+
+Given each preview article usually has a title
+When rendering the previews
+Then make the title clickable and link to the associated article (the same link as Read Full Article)
+
+Given video files can be identified by their extensions (e.g. mp4, mov, avi, wmv, webm, and mkv and others)
+When a video file URL is included in an article preview or article page
+Then use an embedded tag, e.g. <video> with a standard selection of controls (play, stop, etc)
+
+Given audio files can be identified by their extensions (e.g. mp3, wav, flac, ogg, and others)
+When an audio file URL is included in an article preview or article page
+Then use an embedded tag, e.g. <audio> with a standard selection of controls (play, stop, etc)
+
+Given it is easier to read articles and previews when the text area is narrower
+When rendering all of the pages in the application
+Then use a min-width of 25em and a max-width of 50em for the main content 
+And scale images and videos up or down to fill the width of the main content
+
+Implementation Notes
+
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename
