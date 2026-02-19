@@ -3,7 +3,7 @@
  * 
  * For example, if address is 'traktion', <img src="pic.jpg"> becomes <img src="http://traktion/pic.jpg">
  */
-export function rewriteUrls(html: string, address: string, currentPath: string = ''): string {
+export function rewriteUrls(html: string, address: string, currentPath: string = '', articleLink: string = ''): string {
   // Simple regex for src and href attributes that don't already have a protocol
   // This handles common cases like src="image.png", src="./image.png", src="/image.png"
   const rewrittenHtml = html.replace(
@@ -30,7 +30,7 @@ export function rewriteUrls(html: string, address: string, currentPath: string =
   const videoExtensions = ['mp4', 'mov', 'avi', 'wmv', 'webm', 'mkv'];
   const audioExtensions = ['mp3', 'wav', 'flac', 'ogg'];
 
-  return rewrittenHtml.replace(
+  const finalHtml = rewrittenHtml.replace(
     /<a href="(http:\/\/[^"]+\.([^".]+))">([^<]*)<\/a>/gi,
     (match, url, ext, text) => {
       const lowerExt = ext.toLowerCase();
@@ -43,4 +43,10 @@ export function rewriteUrls(html: string, address: string, currentPath: string =
       return match;
     }
   );
+
+  if (articleLink) {
+    return finalHtml.replace(/<h1>(.*?)<\/h1>/gi, `<h1><a href="${articleLink}">$1</a></h1>`);
+  }
+
+  return finalHtml;
 }

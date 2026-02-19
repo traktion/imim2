@@ -27,19 +27,15 @@
     }
   });
 
-  $: html = isMarkdown ? rewriteUrls(marked.parse(content), address, item.name) : '';
-  
-  // Extract title from markdown if available
-  $: title = isMarkdown ? (content.match(/^#\s+(.+)$/m)?.[1] || item.name) : item.name;
+  $: html = isMarkdown ? rewriteUrls(
+    marked.parse(content),
+    address,
+    item.name,
+    `/${address}/${item.name}`
+  ) : '';
 </script>
 
 <div class="py-8 first:pt-0 border-b border-sky-100 last:border-b-0">
-  <h2 class="text-2xl font-bold mb-4">
-    <a href="/{address}/{item.name}" class="hover:underline text-sky-800">
-      {title}
-    </a>
-  </h2>
-  
   <div class="max-h-[75vh] overflow-hidden relative mb-4">
     {#if loading}
       <div class="flex items-center justify-center h-32">
