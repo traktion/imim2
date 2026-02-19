@@ -28,7 +28,7 @@
   }
 </script>
 
-<div class="min-h-screen bg-white text-sky-700 p-6 space-y-4">
+<div class="space-y-4">
   <h1 class="text-2xl font-semibold">Create Article</h1>
   <form class="space-y-3" on:submit|preventDefault={submit}>
     <div>
