@@ -1,6 +1,7 @@
 <script lang="ts">
-  export let data: { address: string };
-  let address = data?.address ?? '';
+  import type { PageData } from './$types';
+  export let data: PageData;
+  $: address = data.address;
   let path = '';
   let content = '';
   let statusMsg = '';
