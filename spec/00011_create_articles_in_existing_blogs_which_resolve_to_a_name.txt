@@ -1,0 +1,59 @@
+As a blog creator
+I want to be able to create articles in existing blogs when the blog address is a name
+So that I can easily add new pages to my blog
+
+Given the create article form only needs 2 fields (Path and Content)
+When rendering and processing the form
+Then only include Path and Content (rename from Markdown field)
+And provide an example Path of `hello-world.md`
+And proved an example Content in the example below.
+
+Given the /anttp-0/multipart/archive/ endpoint expects an immutable address (rather than a name)
+When adding a new article
+Then first resolve the name to an immutable address by calling GET /anttp-0/pnr/{name} to get the pointer
+And keep the 'PNR response' in a variable
+And get the value of `records[""].address` returned in the JSON response as the immutable address
+And add `accept: application/json` header
+
+Given the create route adds a new article to an existing blog
+When adding a new article
+Then ensure the `x-store-type` is set to 'disk' when PUT to /anttp-0/multipart/archive/{address}/{path}
+And use the immutable address from "content" above as the {address}
+And keep the 'address' field in the JSON response as the 'updated immutable address' for the blog
+And add `accept: application/json` header
+
+Given the 'updated immutable address' for the blog is returned after creating an article
+When an article has been added successfully
+Then update the pointer to resolve from the blog 'name' to the 'updated immutable address'
+And make a PUT request to /anttp-0/pnr/{name} with the body set to 'PNR response', but with `records[""].address` set to the 'updated immutable address'
+And ensure the `x-store-type` is set to 'disk' when PUT to /anttp-0/pnr/{name}
+And add `accept: application/json` header
+
+Implementation Notes
+
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
+- Unit test modules where applicable
+
+Example Form Content:
+
+```
+# Main Title
+
+## Sub Title
+
+Regular body text
+
+Emphasis: *italic* / **bold** / ~~strike~~ / `inline code`
+
+Links: [text](http://traktion/clean-green-immutable-dream.md) /  / [ref][id]
+[id]: http://traktion/ "title"
+
+Images: ![alt](http://traktion/markdown-article.png)
+```
+
+Amendments
+
+- The ${address} variable seems to be empty, as `/anttp-0/pointer/${address}` is showing as `/anttp-0/pointer/` in the logs. Is the address variable being set correctly?
+- When calling PUT /anttp-0/multipart/archive/ it should be treated as a 'multipart/form-data' operation, with headers and payload set accordingly.
+- The upload is now working, but it is uploading the file as a directory. Is there a trailing slash that needs trimming?
