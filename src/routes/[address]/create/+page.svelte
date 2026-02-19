@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   export let data: { address: string };
-  let address = data?.address ?? '';
+  let address = '';
+  $: address = data?.address ?? '';
   let path = '';
   let content = '';
   let statusMsg = '';
