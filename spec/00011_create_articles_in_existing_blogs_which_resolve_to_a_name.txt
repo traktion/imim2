@@ -51,3 +51,9 @@ Links: [text](http://traktion/clean-green-immutable-dream.md) /  / [ref][id]
 
 Images: ![alt](http://traktion/markdown-article.png)
 ```
+
+Amendments
+
+- The ${address} variable seems to be empty, as `/anttp-0/pointer/${address}` is showing as `/anttp-0/pointer/` in the logs. Is the address variable being set correctly?
+- When calling PUT /anttp-0/multipart/archive/ it should be treated as a 'multipart/form-data' operation, with headers and payload set accordingly.
+- The upload is now working, but it is uploading the file as a directory. Is there a trailing slash that needs trimming?

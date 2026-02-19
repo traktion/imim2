@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   export let data: { address: string };
   let address = '';
   $: address = data?.address ?? '';
@@ -33,7 +32,6 @@ Images: ![alt](http://traktion/markdown-article.png)`;
       }
       const pnrData = await pnrRes.json();
       const immutableAddress = pnrData.records?.[""]?.address;
-      console.log('immutableAddress: ' + immutableAddress);
       if (!immutableAddress) {
         statusMsg = 'Could not find immutable address in PNR response';
         return;
@@ -61,7 +59,6 @@ Images: ![alt](http://traktion/markdown-article.png)`;
       }
       const uploadData = await uploadRes.json();
       const updatedImmutableAddress = uploadData.address;
-      console.log('updatedImmutableAddress2: ' + updatedImmutableAddress);
       if (!updatedImmutableAddress) {
         statusMsg = 'Could not find updated immutable address in upload response';
         return;
@@ -70,12 +67,9 @@ Images: ![alt](http://traktion/markdown-article.png)`;
       // 3. Update PNR pointer
       statusMsg = 'Updating pointer...';
       const updatedPnrData = { ...pnrData };
-      console.log('updatedPnrData1: ' + JSON.stringify(updatedPnrData));
       if (updatedPnrData.records?.[""]) {
-        console.log('updatedPnrData.records[""]: ' + updatedPnrData.records[""].address);
         updatedPnrData.records[""].address = updatedImmutableAddress;
       }
-      console.log('updatedPnrData2: ' + JSON.stringify(updatedPnrData));
 
       const updatePnrRes = await fetch(`/anttp-0/pnr/${address}`, {
         method: 'PUT',
