@@ -42,10 +42,11 @@ Images: ![alt](http://traktion/markdown-article.png)`;
       // 2. Upload article
       statusMsg = 'Uploading article...';
       const fd = new FormData();
-      const file = new File([content], path || 'hello-world.md', { type: 'text/markdown' });
+      const uploadPath = path || 'hello-world.md';
+      const file = new File([content], uploadPath, { type: 'text/markdown' });
       fd.append('files', file, file.name);
       
-      const uploadRes = await fetch(`/anttp-0/multipart/archive/${immutableAddress}/${encodeURIComponent(path || 'hello-world.md')}`, {
+      const uploadRes = await fetch(`/anttp-0/multipart/archive/${immutableAddress}`, {
         method: 'PUT',
         headers: { 
           'accept': 'application/json',
