@@ -1,0 +1,24 @@
+Improve menu options and routes
+As an blog reader and writer
+I want the menu options to include all the routes and pages needed for IMIM 2.0
+So that I can easily navigate around the application
+
+Given the application currently combines the default/base route (http:///) with a blog address route (e.g. http:///')
+And Browse should include the blog address, e.g. 'Traktion - Browse - IMIM 2.0' for 'http:///traktion/'
+And Read should include the article title and blog address, e.g. 'Streaming on Autonomi - Traktion - Read - IMIM 2.0' for 'http:///traktion/streaming-on-autonomi.md'
+And Write should include the blog address, e.g. 'Traktion - Write - IMIM 2.0' for `http:///traktion/write/`
+And Publish should include the blog address, e.g. 'Traktion - Publish - IMIM 2.0' for `http:///traktion/publish/`
+And About should include the blog address, e.g. 'About - IMIM 2.0' for `http:///about/`
+
+The navigation menu should include: Home, Read, Write, Publish, About. All menu options should always be visible on all routes/pages.
+
+Add 'Home' to the menu and route to the default/base route ('http://<imim2>/') with a title 'Home - IMIM 2.0'
+
+Implementation Notes:
+
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
+- Unit test modules where applicable
+- Move the code in the publish route to the write route and put placeholder text in the publish route
+- Add some text between 'Write Article' and the form inputs to say 'First, write your article and see how it looks. Once happy, you can publish it to the network.'
+- The navigation menu should include: Home, Read, Write, Publish, About. All menu options should always be visible on all routes/pages. Add 'Home' to the menu and route to the default/base route ('http://<imim2>/') with a title 'Home - IMIM 2.0'

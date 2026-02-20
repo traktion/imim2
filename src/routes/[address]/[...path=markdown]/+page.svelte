@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-  <title>{fileTitle} - {data.address} - Article - IMIM 2.0</title>
+  <title>{fileTitle} - {data.address} - Read - IMIM 2.0</title>
 </svelte:head>
 
 <div class="prose max-w-none text-sky-900">

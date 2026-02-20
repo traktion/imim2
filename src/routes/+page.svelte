@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-  <title>IMIM 2.0 - Home</title>
+  <title>Home - IMIM 2.0</title>
 </svelte:head>
 
 <div class="space-y-6 py-8">

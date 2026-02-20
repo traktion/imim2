@@ -18,7 +18,7 @@ Links: [text](http://traktion/clean-green-immutable-dream.md) /  / [ref][id]
 
 Images: ![alt](http://traktion/markdown-article.png)`;
 
-  $: pageTitle = `${address} - Publish - IMIM 2.0`;
+  $: pageTitle = `${address} - Write - IMIM 2.0`;
 
   async function submit(e: Event) {
     e.preventDefault();
@@ -99,7 +99,8 @@ Images: ![alt](http://traktion/markdown-article.png)`;
 </svelte:head>
 
 <div class="space-y-4">
-  <h1 class="text-2xl font-semibold">Create Article</h1>
+  <h1 class="text-2xl font-semibold">Write Article</h1>
+  <p class="text-sky-800">First, write your article and see how it looks. Once happy, you can publish it to the network.</p>
   <form class="space-y-3" on:submit|preventDefault={submit}>
     <div>
       <label class="block text-sm" for="path">Path</label>
