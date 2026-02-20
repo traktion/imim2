@@ -1,5 +1,6 @@
 <script lang="ts">
   import { htmlToMarkdown, markdownToHtml } from '$lib/markdown';
+  import FormatButtonGroup from '$lib/FormatButtonGroup.svelte';
   export let data: { address: string };
   let address = '';
   $: address = data?.address ?? '';
@@ -153,7 +154,10 @@ Images: ![alt](http://traktion/markdown-article.png)`;
     </fieldset>
 
     {#if editor === 'wysiwyg'}
-      <div class="border rounded p-2 min-h-64 prose max-w-none" contenteditable="true" bind:this={wysiwygEl} on:input={onWysiwygInput}>{@html wysiwygHtml || markdownToHtml(content || exampleContent)}</div>
+      <div class="border rounded min-h-64 flex flex-col">
+        <FormatButtonGroup bind:wysiwygEl />
+        <div class="p-2 prose max-w-none flex-grow outline-none" contenteditable="true" bind:this={wysiwygEl} on:input={onWysiwygInput}>{@html wysiwygHtml || markdownToHtml(content || exampleContent)}</div>
+      </div>
     {:else}
       <div>
         <label class="block text-sm" for="content">Content</label>
