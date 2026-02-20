@@ -13,7 +13,7 @@
 
   $: effectiveAddress = address || $activeAddress;
 
-  $: isHome = currentPath === '/' || currentPath === '';
+  $: isHome = currentPath === '/';
   $: isBrowse = effectiveAddress ? (currentPath === `/${effectiveAddress}` || currentPath === `/${effectiveAddress}/`) : false;
   $: isWrite = effectiveAddress ? (currentPath === `/${effectiveAddress}/write`) : false;
   $: isPublish = effectiveAddress ? (currentPath === `/${effectiveAddress}/publish`) : false;

@@ -42,7 +42,7 @@ Images: ![alt](http://traktion/markdown-article.png)`;
     editor = next;
   }
 
-  function onWysiwygInput(e: InputEvent) {
+  function onWysiwygInput(e: Event) {
     const target = e.target as HTMLDivElement;
     wysiwygHtml = target.innerHTML;
   }

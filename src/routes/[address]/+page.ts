@@ -19,5 +19,5 @@ export const load: PageLoad = async ({ params, fetch, data }) => {
   } catch (e) {
     return { address, listing: [], error: 'Invalid JSON in listing' };
   }
-  return { ...data, listing };
+  return { address, listing };
 };
