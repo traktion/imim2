@@ -13,6 +13,7 @@
 
   $: effectiveAddress = address || $activeAddress;
 
+  $: isHome = currentPath === '/' || currentPath === '';
   $: isBrowse = effectiveAddress ? (currentPath === `/${effectiveAddress}` || currentPath === `/${effectiveAddress}/`) : false;
   $: isWrite = effectiveAddress ? (currentPath === `/${effectiveAddress}/write`) : false;
   $: isPublish = effectiveAddress ? (currentPath === `/${effectiveAddress}/publish`) : false;
@@ -26,6 +27,9 @@
 
 <nav class="w-full bg-sky-600 text-white mb-6">
   <div class="flex items-center">
+    <a href="/" class="{baseClass} {isHome ? activeClass : inactiveClass}">
+      Home
+    </a>
     {#if effectiveAddress}
       <a href="/{effectiveAddress}" class="{baseClass} {isBrowse ? activeClass : inactiveClass}">
         Browse
