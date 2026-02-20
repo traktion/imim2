@@ -26,11 +26,16 @@ npm run check
 
 ## Build (Static Site Generation)
 
-This project uses `@sveltejs/adapter-static` to generate a static build suitable for hosting on any static host. Client-side navigation is enabled with a fallback `404.html` for dynamic routes.
+This project uses `@sveltejs/adapter-static` to generate a static build suitable for hosting on any static host. Client-side navigation is enabled with a fallback `index.html` for dynamic routes, allowing the application to function as a Single Page Application (SPA).
 
 Build for production:
 ```bash
 npm run build
+```
+
+To build for a specific subdirectory (e.g., `/blog`), use the `BASE_PATH` environment variable:
+```bash
+BASE_PATH=/blog npm run build
 ```
 
 Preview the built app:
