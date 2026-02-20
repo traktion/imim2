@@ -40,3 +40,7 @@ Implementation Notes:
 - If needed, view SSG adapter documentation here: https://svelte.dev/docs/kit/adapter-static
 - Include the main menu across the top of the about route/page
 - Include the same navigation menu across the top of all routes/pages so that it is always visible and all routes are accessible
+
+Amendments
+
+- Ensure that article URLs have the '.md' extension and do not end with a trailing slash
