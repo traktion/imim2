@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-  <title>{data.address} - Home - IMIM 2.0</title>
+  <title>{data.address} - Browse - IMIM 2.0</title>
 </svelte:head>
 
 <div class="space-y-4">
