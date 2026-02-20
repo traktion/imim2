@@ -1,10 +1,17 @@
 <script lang="ts">
+  import { htmlToMarkdown, markdownToHtml } from '$lib/markdown';
   export let data: { address: string };
   let address = '';
   $: address = data?.address ?? '';
   let path = '';
   let content = '';
   let statusMsg = '';
+
+  // editor state
+  let editor: 'wysiwyg' | 'raw' = 'wysiwyg';
+  let wysiwygHtml = '';
+  let wysiwygEl: HTMLDivElement | null = null;
+
   const exampleContent = `# Main Title
 
 ## Sub Title
@@ -20,9 +27,33 @@ Images: ![alt](http://traktion/markdown-article.png)`;
 
   $: pageTitle = `${address} - Write - IMIM 2.0`;
 
+  // keep editors in sync when switching
+  function setEditor(next: 'wysiwyg' | 'raw') {
+    if (next === editor) return;
+    if (next === 'wysiwyg') {
+      // seed WYSIWYG with current markdown
+      wysiwygHtml = markdownToHtml(content);
+      // update DOM if already mounted
+      if (wysiwygEl) wysiwygEl.innerHTML = wysiwygHtml;
+    } else {
+      // convert current WYSIWYG html to markdown
+      content = htmlToMarkdown(wysiwygHtml);
+    }
+    editor = next;
+  }
+
+  function onWysiwygInput(e: InputEvent) {
+    const target = e.target as HTMLDivElement;
+    wysiwygHtml = target.innerHTML;
+  }
+
   async function submit(e: Event) {
     e.preventDefault();
     statusMsg = 'Resolving address...';
+
+    // Determine content to save (convert HTML -> Markdown if needed)
+    const contentToSave = editor === 'wysiwyg' ? htmlToMarkdown(wysiwygHtml) : content;
+
     try {
       // 1. Resolve name to immutable address
       const pnrRes = await fetch(`/anttp-0/pnr/${address}`, {
@@ -43,7 +74,7 @@ Images: ![alt](http://traktion/markdown-article.png)`;
       statusMsg = 'Uploading article...';
       const fd = new FormData();
       const uploadPath = path || 'hello-world.md';
-      const file = new File([content], uploadPath, { type: 'text/markdown' });
+      const file = new File([contentToSave], uploadPath, { type: 'text/markdown' });
       fd.append('files', file, file.name);
       
       const uploadRes = await fetch(`/anttp-0/multipart/archive/${immutableAddress}`, {
@@ -106,10 +137,30 @@ Images: ![alt](http://traktion/markdown-article.png)`;
       <label class="block text-sm" for="path">Path</label>
       <input id="path" class="border p-2 w-full" bind:value={path} placeholder="hello-world.md" required />
     </div>
-    <div>
-      <label class="block text-sm" for="content">Content</label>
-      <textarea id="content" class="border p-2 w-full h-64" bind:value={content} placeholder={exampleContent} required></textarea>
-    </div>
+
+    <fieldset class="space-y-2">
+      <legend class="text-sm font-medium text-sky-900">Editor</legend>
+      <div class="flex items-center gap-4 text-sm">
+        <label class="inline-flex items-center gap-2">
+          <input type="radio" name="editor" value="wysiwyg" checked={editor==='wysiwyg'} on:change={() => setEditor('wysiwyg')} />
+          WYSIWYG (default)
+        </label>
+        <label class="inline-flex items-center gap-2">
+          <input type="radio" name="editor" value="raw" checked={editor==='raw'} on:change={() => setEditor('raw')} />
+          Raw Markdown
+        </label>
+      </div>
+    </fieldset>
+
+    {#if editor === 'wysiwyg'}
+      <div class="border rounded p-2 min-h-64 prose max-w-none" contenteditable="true" bind:this={wysiwygEl} on:input={onWysiwygInput}>{@html wysiwygHtml || markdownToHtml(content || exampleContent)}</div>
+    {:else}
+      <div>
+        <label class="block text-sm" for="content">Content</label>
+        <textarea id="content" class="border p-2 w-full h-64" bind:value={content} placeholder={exampleContent} required></textarea>
+      </div>
+    {/if}
+
     <button class="bg-sky-600 text-white px-4 py-2 rounded" type="submit">Publish</button>
   </form>
   {#if statusMsg}
