@@ -3,6 +3,10 @@
   export let data: { address: string; listing: any[]; error?: string };
 </script>
 
+<svelte:head>
+  <title>{data.address} - Home - IMIM 2.0</title>
+</svelte:head>
+
 <div class="space-y-4">
   {#if data.error}
     <p class="text-red-600">{data.error}</p>

@@ -18,6 +18,8 @@ Links: [text](http://traktion/clean-green-immutable-dream.md) /  / [ref][id]
 
 Images: ![alt](http://traktion/markdown-article.png)`;
 
+  $: pageTitle = `${address} - Publish - IMIM 2.0`;
+
   async function submit(e: Event) {
     e.preventDefault();
     statusMsg = 'Resolving address...';
@@ -91,6 +93,10 @@ Images: ![alt](http://traktion/markdown-article.png)`;
     }
   }
 </script>
+
+<svelte:head>
+  <title>{pageTitle}</title>
+</svelte:head>
 
 <div class="space-y-4">
   <h1 class="text-2xl font-semibold">Create Article</h1>
