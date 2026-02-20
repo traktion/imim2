@@ -39,3 +39,4 @@ Implementation Notes:
 - Unit test modules where applicable
 - If needed, view SSG adapter documentation here: https://svelte.dev/docs/kit/adapter-static
 - Include the main menu across the top of the about route/page
+- Include the same navigation menu across the top of all routes/pages so that it is always visible and all routes are accessible
