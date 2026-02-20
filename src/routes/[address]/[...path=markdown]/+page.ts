@@ -10,5 +10,5 @@ export const load: PageLoad = async ({ params, fetch, data }) => {
     return { address, path, markdown: `# Error ${res.status}`, error: `Failed to fetch article (${res.status})` };
   }
   const markdown = await res.text();
-  return { ...data, path, markdown };
+  return { address, path, markdown };
 };
