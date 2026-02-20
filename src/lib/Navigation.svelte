@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  export let address: string;
+  export let address: string | undefined = undefined;
 
   $: currentPath = $page.url.pathname;
   
@@ -9,10 +9,10 @@
   // Publish: /[address]/create
   // About: /about
 
-  $: isHome = currentPath === `/${address}` || currentPath === `/${address}/`;
-  $: isPublish = currentPath === `/${address}/create`;
-  $: isArticle = !isHome && !isPublish && currentPath.startsWith(`/${address}/`);
-  $: isAbout = currentPath.startsWith('/about');
+  $: isHome = address ? (currentPath === `/${address}` || currentPath === `/${address}/`) : false;
+  $: isPublish = address ? (currentPath === `/${address}/create`) : false;
+  $: isArticle = address ? (!isHome && !isPublish && currentPath.startsWith(`/${address}/`)) : false;
+  $: isAbout = (currentPath as string) === '/about' || (currentPath as string) === '/about/';
 
   const baseClass = "px-4 py-2 transition-colors";
   const activeClass = "bg-sky-800 text-white";
@@ -21,15 +21,17 @@
 
 <nav class="w-full bg-sky-600 text-white mb-6">
   <div class="flex items-center">
-    <a href="/{address}" class="{baseClass} {isHome ? activeClass : inactiveClass}">
-      Home
-    </a>
-    <a href={isArticle ? currentPath : `/${address}`} class="{baseClass} {isArticle ? activeClass : inactiveClass}">
-      Article
-    </a>
-    <a href="/{address}/create" class="{baseClass} {isPublish ? activeClass : inactiveClass}">
-      Publish
-    </a>
+    {#if address}
+      <a href="/{address}" class="{baseClass} {isHome ? activeClass : inactiveClass}">
+        Home
+      </a>
+      <a href={isArticle ? currentPath : `/${address}`} class="{baseClass} {isArticle ? activeClass : inactiveClass}">
+        Article
+      </a>
+      <a href="/{address}/create" class="{baseClass} {isPublish ? activeClass : inactiveClass}">
+        Publish
+      </a>
+    {/if}
     <a href="/about" class="{baseClass} {isAbout ? activeClass : inactiveClass}">
       About
     </a>
