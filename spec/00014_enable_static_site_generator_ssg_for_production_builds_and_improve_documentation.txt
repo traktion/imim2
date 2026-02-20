@@ -44,3 +44,4 @@ Implementation Notes:
 Amendments
 
 - Ensure that article URLs have the '.md' extension and do not end with a trailing slash
+- There is no index.html in the /build directory after build. Can the build be configured to allow the site to be served from this build directory and also allow the site to be served from a directory or the site root?
