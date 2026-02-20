@@ -1,0 +1,40 @@
+As a software engineer
+I want to build IMIM 2.0 into an SSG format and add user documentation
+So that the application is easier to deploy and understand
+
+Given Svelte has an SSG adapter
+When building the application
+Then configure the SSG adapter and confirm it can build the package correctly
+
+Given it would be simpler for users to download the application from a zip file
+When building the application in github
+Then create a github workflow which builds the static app (using SSG adapter), zips the files if multiple files, then creates a draft release based on the package.json version
+
+Given users like to read good documentation
+When preparing the application for release
+Then re-generate the README.md to provide a summary of what the IMIM 2.0 application does
+And include development and build instructions
+And explain that a local AntTP instance must be present and configured as a proxy in your browser
+
+Given IMIM 2.0 should also have an 'about' page detailing what the application is and does
+When improving the documentation
+Then also add a new 'about' route to the application and add it to the menu as 'About'
+And populate it with a brief summary of what the application is and does
+And add a link to https://github.com/traktion/imim2 for the code repository (and for more information)
+And add a link to https://www.linkedin.com/in/paul-s-green/ for the developer's bio
+And add a link to https://autonomi.com/ for Autonomi
+
+Given IMIM 2.0 should also have page titles showing in the browser tab
+When preparing the application for release
+Then include page titles to reflect the menu item names
+And Home should include the blog address, e.g. 'Traktion - Home - IMIM 2.0' for `http:///traktion`
+And Article should include the article title and blog address, e.g. 'Streaming on Autonomi - Traktion - Article - IMIM 2.0' for `http:///traktion/streaming-on-autonomi.md`
+And Publish should include the blog address, e.g. 'Traktion - Publish - IMIM 2.0' for `http:///traktion/create`
+And About should include the blog address, e.g. 'About - IMIM 2.0' for `http:///about`
+
+Implementation Notes:
+
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
+- Unit test modules where applicable
+- If needed, view SSG adapter documentation here: https://svelte.dev/docs/kit/adapter-static

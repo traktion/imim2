@@ -1,38 +1,50 @@
-# create-svelte
+# IMIM 2.0
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+IMIM 2.0 is a SvelteKit application for browsing and publishing markdown content to Autonomi over the AntTP protocol.
 
-## Creating a project
+It expects a local AntTP instance and a browser proxy configuration to route requests to Autonomi. See the notes below.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Development
 
+Requirements:
+- Node.js 18.19.x
+
+Install dependencies:
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+npm install
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+Run the dev server (Vite):
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+Type/svelte checks:
+```bash
+npm run check
+```
 
-To create a production version of your app:
+## Build (Static Site Generation)
 
+This project uses `@sveltejs/adapter-static` to generate a static build suitable for hosting on any static host. Client-side navigation is enabled with a fallback `404.html` for dynamic routes.
+
+Build for production:
 ```bash
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+Preview the built app:
+```bash
+npm run preview
+```
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## AntTP proxy requirement
+
+To resolve addresses and publish content, ensure a local AntTP instance is running and your browser is configured to proxy AntTP endpoints locally. Without this, network operations in the app will fail.
+
+## About and documentation
+
+An `About` page is available at `/about` with links to:
+- Code: https://github.com/traktion/imim2
+- Developer bio: https://www.linkedin.com/in/paul-s-green/
+- Autonomi: https://autonomi.com/

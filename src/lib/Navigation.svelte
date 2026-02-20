@@ -7,10 +7,12 @@
   // Home: /[address]
   // Article: /[address]/[path] (usually active when viewing a specific article)
   // Publish: /[address]/create
+  // About: /about
 
   $: isHome = currentPath === `/${address}` || currentPath === `/${address}/`;
   $: isPublish = currentPath === `/${address}/create`;
   $: isArticle = !isHome && !isPublish && currentPath.startsWith(`/${address}/`);
+  $: isAbout = currentPath.startsWith('/about');
 
   const baseClass = "px-4 py-2 transition-colors";
   const activeClass = "bg-sky-800 text-white";
@@ -27,6 +29,9 @@
     </a>
     <a href="/{address}/create" class="{baseClass} {isPublish ? activeClass : inactiveClass}">
       Publish
+    </a>
+    <a href="/about" class="{baseClass} {isAbout ? activeClass : inactiveClass}">
+      About
     </a>
   </div>
 </nav>
