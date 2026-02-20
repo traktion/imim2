@@ -100,6 +100,7 @@ Images: ![alt](http://traktion/markdown-article.png)`;
 
 <div class="space-y-4">
   <h1 class="text-2xl font-semibold">Write Article</h1>
+  <p class="text-sky-800">First, write your article and see how it looks. Once happy, you can publish it to the network.</p>
   <form class="space-y-3" on:submit|preventDefault={submit}>
     <div>
       <label class="block text-sm" for="path">Path</label>
