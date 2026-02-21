@@ -1,0 +1,27 @@
+As a blog writer
+I want to be able to publish my changes to Autonomi network, once I have confirmed the look and feel is good
+So that others can then view my new blog articles, but only when they are ready
+
+Given the PNR records and Archive will already for any updated blogs (that have new or updated articles)
+When the author goes to the publish page and clicks 'Publish to Autonomi'
+Then the AntTP endpoints to update the Archive and PNR are called with x-store-type = 'network'
+
+Given the blog address being published
+When publishing the blog
+Then first call GET /anttp-0/pnr/{address} to get the latest PNR record from memory/disk/network with 'accept: application/json' header
+And get the value of records[""].address returned in the JSON response as the {immutable_address}
+And then call PUT /anttp-0/pnr/{address} with the PNR record returned above, with the header 'x-store-type: network' to persist the record to the network
+
+Given the blog address being published
+When publishing the blog
+Then call POST /anttp-0/archive/{immutable_address} with the header 'x-store-type: network' to persist the archive to the network
+
+Given there are no errors when making the above calls
+When the publishing is completed
+Then show a publishing successful confirmation message
+
+Implementation Notes:
+
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
+- Unit test modules where applicable
