@@ -23,10 +23,10 @@ describe('comments utility', () => {
       }));
       expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry', expect.objectContaining({
         method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-data-key': 'resolver' },
         body: JSON.stringify({
           content: 'new_addr',
-          name: 'imim_blog_article_comment1',
-          data_key: 'resolver'
+          name: 'imim_blog_article_comment1'
         })
       }));
     });

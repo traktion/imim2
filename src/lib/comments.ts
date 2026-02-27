@@ -82,11 +82,10 @@ export async function publishComment(
     const commentKey = getCommentKey(address, path, currentIndex + 1);
     const graphEntryRes = await fetchFn('/anttp-0/graph_entry', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-data-key': 'resolver' },
       body: JSON.stringify({
         content: contentAddress,
-        name: commentKey,
-        data_key: 'resolver'
+        name: commentKey
       })
     });
 
