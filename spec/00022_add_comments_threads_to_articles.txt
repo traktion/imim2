@@ -1,0 +1,40 @@
+As a blog reader
+I want to be able to leave comments on blogs and reply to other comments
+So that a blog article can become a place for conversation about the article
+
+Given each article can have comments thread, even after an archive has been updated
+When adding the first comment
+Then use the concatenation of 'imim', blog name, article file name (without extension), and 'comment1' (each separated by an underscore) as the comment key for the first comment
+And an example key would be 'imim_blogname_articlename_comment1'
+
+Given each article can have comments thread, even after an archive has been updated
+When adding the Nth comment (where N is second, third, ..., X comment)
+Then use the concatenation of 'imim', blog name, article file name (without extension), and 'commentN' (each separated by an underscore) as the comment key for the first comment
+And an example key would be 'imim_blogname_articlename_comment2' or 'imim_blogname_articlename_comment3'
+ 
+Given each comment must be created as public data and then stored to a graph entry
+When adding a comment
+Then create the public data by calling POST /anttp-0/binary/public_data with the comment text,  with 'Content-Type: application/octet-stream' and a binary data payload 
+And then create a graph entry by calling POST /anttp-0/graph_entry with the 'resolver' data key, and the comment key as the graph entry name, and use the address return when creating public data as the content
+And an example payload is below:
+
+```
+{
+  "content": "03d823ba9c2caadf69b477e1ab1393a6d3df63a4e165b79955ad80e737d9522b",
+  "name": "imim_blogname_articlename_comment1"
+}
+```
+
+Given comments should show on the 'read' article page
+When the article has loaded
+Then check whether the comment keys returns a graph entry with GET /anttp-0/graph_entry/{address}, e.g. /anttp-0/graph_entry/imim_blogname_articlename_comment1 with the 'resolver' data key, using 'content' as the 'address' of the public data
+And if the comment exists, then retrieve the public data using GET /anttp-0/binary/public_data/{address}
+And then render the comment as a quoted text block
+And then increment the comment number and repeat until there are no matches, e.g. GET /anttp-0/graph_entry/{address}, e.g. /anttp-0/graph_entry/imim_blogname_articlename_comment2, then GET /anttp-0/graph_entry/{address}, e.g. /anttp-0/graph_entry/imim_blogname_articlename_comment3, etc.
+And then render a 'Write a comment' link (which will be wired up in another task) after the last comment
+
+Implementation Notes
+
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
+- Unit test modules where applicable
