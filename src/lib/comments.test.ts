@@ -32,10 +32,11 @@ describe('comments utility', () => {
     });
 
     it('handles failure in public data creation', async () => {
-      const mockFetch = vi.fn().mockResolvedValue({ ok: false });
+      const mockFetch = vi.fn().mockResolvedValue({ ok: false, status: 500, text: async () => 'Error' });
       const result = await publishComment('blog', 'article.md', 'Hello', 0, mockFetch as any);
       expect(result.success).toBe(false);
-      expect(result.error).toBe('Failed to create public data');
+      expect(result.error).toContain('Failed to create public data');
+      expect(result.error).toContain('500 Error');
     });
   });
 

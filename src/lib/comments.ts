@@ -71,7 +71,8 @@ export async function publishComment(
     });
 
     if (!publicDataRes.ok) {
-      return { success: false, error: 'Failed to create public data' };
+      const errorText = await publicDataRes.text().catch(() => 'No error body');
+      return { success: false, error: `Failed to create public data: ${publicDataRes.status} ${errorText}` };
     }
 
     const publicData = await publicDataRes.json();
@@ -90,7 +91,8 @@ export async function publishComment(
     });
 
     if (!graphEntryRes.ok) {
-      return { success: false, error: 'Failed to create graph entry' };
+      const errorText = await graphEntryRes.text().catch(() => 'No error body');
+      return { success: false, error: `Failed to create graph entry: ${graphEntryRes.status} ${errorText}` };
     }
 
     return { success: true };

@@ -49,17 +49,11 @@
     
     if (result.success) {
       // Clear state and hide editor
-      const tempComment = newCommentText;
       newCommentText = '';
       isWritingComment = false;
       isPublishing = false;
       
-      // We don't have the address of the newly created comment immediately here (publishComment doesn't return it)
-      // but we can just reload comments or add a optimistic one if we wanted.
-      // The requirement says: "if it was successful, then render the comment in the correct location in the list of comments"
-      // Since getComments polls/fetches sequentially, we can just trigger it again or 
-      // since it's already running it might not pick it up if it already hit a null.
-      // Let's just reset and reload for simplicity and to ensure "correct location".
+      // Reload comments
       comments = [];
       commentsLoading = true;
       loadComments();
