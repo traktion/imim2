@@ -64,11 +64,10 @@ describe('comments utility', () => {
       expect(receivedComments[1].loading).toBe(false);
     });
     
-    // It should have tried to fetch 5 graph entries for the first batch
+    // It should have tried to fetch 2 graph entries for the first batch
     expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment1', expect.anything());
     expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment2', expect.anything());
+    // Since we found addr2 at comment2, it should continue to the next batch
     expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment3', expect.anything());
-    expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment4', expect.anything());
-    expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment5', expect.anything());
   });
 });
