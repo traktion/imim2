@@ -7,7 +7,7 @@ describe('comments utility', () => {
     expect(getCommentKey('blog', 'folder/article.md', 2)).toBe('imim_blog_article_comment2');
   });
 
-  it('fetches comments sequentially', async () => {
+  it('fetches comments in batches and calls onComment', async () => {
     const mockFetch = vi.fn()
       .mockImplementation(async (url) => {
         if (url === '/anttp-0/graph_entry/imim_blog_article_comment1') {
@@ -25,11 +25,50 @@ describe('comments utility', () => {
         return { ok: false, status: 404 };
       });
 
-    const comments = await getComments('blog', 'article.md', mockFetch as any);
+    const receivedComments: any[] = [];
+    await getComments('blog', 'article.md', (c) => {
+      // Find and update or add
+      const idx = receivedComments.findIndex(rc => rc.address === c.address);
+      if (idx !== -1) {
+        receivedComments[idx] = { ...c };
+      } else {
+        receivedComments.push({ ...c });
+      }
+    }, mockFetch as any);
     
-    expect(comments).toHaveLength(2);
-    expect(comments[0]).toEqual({ text: 'Comment 1', address: 'addr1' });
-    expect(comments[1]).toEqual({ text: 'Comment 2', address: 'addr2' });
-    expect(mockFetch).toHaveBeenCalledTimes(5); // 3 graph_entry attempts (1, 2, 3-fails) + 2 public_data fetches
+    // We expect 2 comments eventually
+    // Since fetches are async, we might need to wait for them. 
+    // In a test with vi.fn() that returns resolved promises, they will resolve in the next microtick.
+    // But getComments itself is async and we awaited it. 
+    // Wait, getComments now finishes graph entries, but the public_data fetches might still be pending.
+    
+    // Let's use a small helper to wait for the expected state
+    const waitFor = async (fn: () => void, timeout = 1000) => {
+      const start = Date.now();
+      while (Date.now() - start < timeout) {
+        try {
+          fn();
+          return;
+        } catch (e) {
+          await new Promise(r => setTimeout(r, 10));
+        }
+      }
+      fn(); // Final attempt to throw
+    };
+
+    await waitFor(() => {
+      expect(receivedComments).toHaveLength(2);
+      expect(receivedComments[0].text).toBe('Comment 1');
+      expect(receivedComments[0].loading).toBe(false);
+      expect(receivedComments[1].text).toBe('Comment 2');
+      expect(receivedComments[1].loading).toBe(false);
+    });
+    
+    // It should have tried to fetch 5 graph entries for the first batch
+    expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment1', expect.anything());
+    expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment2', expect.anything());
+    expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment3', expect.anything());
+    expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment4', expect.anything());
+    expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry/imim_blog_article_comment5', expect.anything());
   });
 });

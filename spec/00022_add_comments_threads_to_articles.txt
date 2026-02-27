@@ -33,8 +33,19 @@ And then render the comment as a quoted text block
 And then increment the comment number and repeat until there are no matches, e.g. GET /anttp-0/graph_entry/{address}, e.g. /anttp-0/graph_entry/imim_blogname_articlename_comment2, then GET /anttp-0/graph_entry/{address}, e.g. /anttp-0/graph_entry/imim_blogname_articlename_comment3, etc.
 And then render a 'Write a comment' link (which will be wired up in another task) after the last comment
 
+Given there is a high latency when fetching both the comment graph entry and the comment public data
+When retrieving comments via the API
+Then fetch comments in batches of 5
+And render the comment text into the page once the comment data has been downloaded
+And use a loading icon in each comment text element to show that it is being retrieved
+And hide comment text elements which return no data
+
 Implementation Notes
 
 - Increment patch version in /package.json
 - Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00016_issue_title.txt)
 - Unit test modules where applicable
+
+Amendments
+
+- Rename addComment in comments.ts to fetchComment (to avoid confusion with writing comments).
