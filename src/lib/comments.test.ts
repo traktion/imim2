@@ -1,7 +1,79 @@
 import { describe, it, expect, vi } from 'vitest';
-import { getCommentKey, getComments } from './comments';
+import { getCommentKey, getComments, sanitiseComment, renderComment, publishComment } from './comments';
 
 describe('comments utility', () => {
+  describe('publishComment', () => {
+    it('successfully publishes a comment', async () => {
+      const mockFetch = vi.fn()
+        .mockImplementation(async (url, init) => {
+          if (url === '/anttp-0/binary/public_data') {
+            return { ok: true, json: async () => ({ address: 'new_addr' }) };
+          }
+          if (url === '/anttp-0/graph_entry') {
+            return { ok: true };
+          }
+          return { ok: false };
+        });
+
+      const result = await publishComment('blog', 'article.md', 'Hello', 0, mockFetch as any);
+      expect(result.success).toBe(true);
+      expect(mockFetch).toHaveBeenCalledWith('/anttp-0/binary/public_data', expect.objectContaining({
+        method: 'POST',
+        body: 'Hello'
+      }));
+      expect(mockFetch).toHaveBeenCalledWith('/anttp-0/graph_entry', expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({
+          content: 'new_addr',
+          name: 'imim_blog_article_comment1',
+          data_key: 'resolver'
+        })
+      }));
+    });
+
+    it('handles failure in public data creation', async () => {
+      const mockFetch = vi.fn().mockResolvedValue({ ok: false });
+      const result = await publishComment('blog', 'article.md', 'Hello', 0, mockFetch as any);
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Failed to create public data');
+    });
+  });
+
+  describe('sanitiseComment', () => {
+    it('strips control characters', () => {
+      expect(sanitiseComment('Hello\x00World')).toBe('HelloWorld');
+    });
+
+    it('strips URLs', () => {
+      expect(sanitiseComment('Check this http://example.com link')).toBe('Check this [URL REMOVED] link');
+      expect(sanitiseComment('Check this https://example.com link')).toBe('Check this [URL REMOVED] link');
+    });
+
+    it('strips swear words', () => {
+      expect(sanitiseComment('This is shit')).toBe('This is ****');
+      expect(sanitiseComment('FUCK that')).toBe('**** that');
+    });
+
+    it('restricts characters to alphanumeric and basic punctuation', () => {
+      expect(sanitiseComment('Hello! How are you? (fine) - "quoted" @#$%')).toBe('Hello! How are you? (fine) - "quoted" ');
+    });
+  });
+
+  describe('renderComment', () => {
+    it('renders markdown to HTML', () => {
+      const result = renderComment('**bold** and *italic*');
+      expect(result).toContain('<strong>bold</strong>');
+      expect(result).toContain('<em>italic</em>');
+    });
+
+    it('sanitises before rendering', () => {
+      const result = renderComment('**bold** shit http://example.com');
+      expect(result).toContain('<strong>bold</strong>');
+      expect(result).toContain('****');
+      expect(result).toContain('[URL REMOVED]');
+    });
+  });
+
   it('generates correct comment keys', () => {
     expect(getCommentKey('blogname', 'article.md', 1)).toBe('imim_blogname_article_comment1');
     expect(getCommentKey('blog', 'folder/article.md', 2)).toBe('imim_blog_article_comment2');
