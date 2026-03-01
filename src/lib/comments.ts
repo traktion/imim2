@@ -63,35 +63,16 @@ export async function publishComment(
   fetchFn: typeof fetch = fetch
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // 1. Create public data
-    const publicDataRes = await fetchFn('/anttp-0/binary/public_data', {
+    const commentKey = getCommentKey(address, path, currentIndex + 1);
+    const res = await fetchFn(`/anttp-0/binary/key_value/${commentKey}/msg1`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/octet-stream' },
       body: commentText
     });
 
-    if (!publicDataRes.ok) {
-      const errorText = await publicDataRes.text().catch(() => 'No error body');
-      return { success: false, error: `Failed to create public data: ${publicDataRes.status} ${errorText}` };
-    }
-
-    const publicData = await publicDataRes.json();
-    const contentAddress = publicData.address;
-
-    // 2. Create graph entry
-    const commentKey = getCommentKey(address, path, currentIndex + 1);
-    const graphEntryRes = await fetchFn('/anttp-0/graph_entry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-data-key': 'resolver' },
-      body: JSON.stringify({
-        content: contentAddress,
-        name: commentKey
-      })
-    });
-
-    if (!graphEntryRes.ok) {
-      const errorText = await graphEntryRes.text().catch(() => 'No error body');
-      return { success: false, error: `Failed to create graph entry: ${graphEntryRes.status} ${errorText}` };
+    if (!res.ok) {
+      const errorText = await res.text().catch(() => 'No error body');
+      return { success: false, error: `Failed to create comment: ${res.status} ${errorText}` };
     }
 
     return { success: true };
@@ -114,53 +95,34 @@ export async function getComments(
     const batchIndices = Array.from({ length: BATCH_SIZE }, (_, i) => index + i);
     let foundInBatch = false;
 
-    // Fetch batch of graph entries in parallel
-    const graphPromises = batchIndices.map(async (idx) => {
+    // Fetch batch of key_value entries in parallel
+    const kvPromises = batchIndices.map(async (idx) => {
       const commentKey = getCommentKey(address, path, idx);
-      const res = await fetchFn(`/anttp-0/graph_entry/${commentKey}`, {
+      const res = await fetchFn(`/anttp-0/binary/key_value/${commentKey}/msg1`, {
         headers: { 
-          'accept': 'application/json',
-          'x-data-key': 'resolver'
+          'accept': 'application/octet-stream'
         }
       });
       if (res.ok) {
-        const data = await res.json();
-        return { index: idx, address: data.content };
+        const text = await res.text();
+        return { index: idx, text, found: true };
       }
-      return { index: idx, address: null };
+      return { index: idx, text: '', found: false };
     });
 
-    const graphResults = await Promise.all(graphPromises);
+    const kvResults = await Promise.all(kvPromises);
     
     // Sort by index to maintain order
-    graphResults.sort((a, b) => a.index - b.index);
+    kvResults.sort((a, b) => a.index - b.index);
 
-    for (const result of graphResults) {
-      if (result.address) {
+    for (const result of kvResults) {
+      if (result.found) {
         foundInBatch = true;
-        // Create a placeholder comment in loading state
-        const comment: Comment = { text: '', address: result.address, loading: true };
+        // Directly notify the comment text
+        const comment: Comment = { text: result.text, address: '', loading: false };
         onComment(comment);
-
-        // Fetch the data asynchronously without awaiting it here
-        fetchFn(`/anttp-0/binary/public_data/${result.address}`).then(async (dataRes) => {
-          if (dataRes.ok) {
-            comment.text = await dataRes.text();
-          } else {
-            // Requirement says "hide comment text elements which return no data"
-            comment.text = '';
-          }
-          comment.loading = false;
-          onComment(comment); // Notify update
-        }).catch(() => {
-          comment.loading = false;
-          comment.text = '';
-          onComment(comment);
-        });
       } else {
-        // If we hit a gap, we assume no more comments? 
-        // Sequential requirement from previous issue: "repeat until there are no matches"
-        // So first null means end.
+        // If we hit a gap, we assume no more comments
         return; 
       }
     }
