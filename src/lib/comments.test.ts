@@ -89,8 +89,10 @@ describe('comments utility', () => {
     
     expect(receivedComments).toHaveLength(2);
     expect(receivedComments[0].text).toBe('Comment 1');
+    expect(receivedComments[0].address).toBe('imim_blog_article_comment1');
     expect(receivedComments[0].loading).toBe(false);
     expect(receivedComments[1].text).toBe('Comment 2');
+    expect(receivedComments[1].address).toBe('imim_blog_article_comment2');
     expect(receivedComments[1].loading).toBe(false);
     
     // It should have tried to fetch 2 entries for the first batch

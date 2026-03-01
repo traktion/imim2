@@ -119,7 +119,8 @@ export async function getComments(
       if (result.found) {
         foundInBatch = true;
         // Directly notify the comment text
-        const comment: Comment = { text: result.text, address: '', loading: false };
+        const commentKey = getCommentKey(address, path, result.index);
+        const comment: Comment = { text: result.text, address: commentKey, loading: false };
         onComment(comment);
       } else {
         // If we hit a gap, we assume no more comments
