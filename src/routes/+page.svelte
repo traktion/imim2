@@ -4,7 +4,7 @@
 
   function handleSubmit() {
     if (address.trim()) {
-      goto(`/${address.trim()}`);
+      goto(`/blog/${address.trim()}`);
     }
   }
 </script>

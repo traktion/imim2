@@ -14,10 +14,10 @@
   $: effectiveAddress = address || $activeAddress;
 
   $: isHome = currentPath === '/';
-  $: isBrowse = effectiveAddress ? (currentPath === `/${effectiveAddress}` || currentPath === `/${effectiveAddress}/`) : false;
-  $: isWrite = effectiveAddress ? (currentPath === `/${effectiveAddress}/write`) : false;
-  $: isPublish = effectiveAddress ? (currentPath === `/${effectiveAddress}/publish`) : false;
-  $: isRead = effectiveAddress ? (!isBrowse && !isWrite && !isPublish && currentPath.startsWith(`/${effectiveAddress}/`)) : false;
+  $: isBrowse = effectiveAddress ? (currentPath === `/blog/${effectiveAddress}` || currentPath === `/blog/${effectiveAddress}/`) : false;
+  $: isWrite = effectiveAddress ? (currentPath === `/blog/${effectiveAddress}/write`) : false;
+  $: isPublish = effectiveAddress ? (currentPath === `/blog/${effectiveAddress}/publish`) : false;
+  $: isRead = effectiveAddress ? (!isBrowse && !isWrite && !isPublish && currentPath.startsWith(`/blog/${effectiveAddress}/`)) : false;
   $: isAbout = (currentPath as string) === '/about' || (currentPath as string) === '/about/';
 
   const baseClass = "px-4 py-2 transition-colors";
@@ -31,16 +31,16 @@
       Home
     </a>
     {#if effectiveAddress}
-      <a href="/{effectiveAddress}" class="{baseClass} {isBrowse ? activeClass : inactiveClass}">
+      <a href="/blog/{effectiveAddress}" class="{baseClass} {isBrowse ? activeClass : inactiveClass}">
         Browse
       </a>
-      <a href={isRead ? currentPath : `/${effectiveAddress}`} class="{baseClass} {isRead ? activeClass : inactiveClass}">
+      <a href={isRead ? currentPath : `/blog/${effectiveAddress}`} class="{baseClass} {isRead ? activeClass : inactiveClass}">
         Read
       </a>
-      <a href="/{effectiveAddress}/write" class="{baseClass} {isWrite ? activeClass : inactiveClass}">
+      <a href="/blog/{effectiveAddress}/write" class="{baseClass} {isWrite ? activeClass : inactiveClass}">
         Write
       </a>
-      <a href="/{effectiveAddress}/publish" class="{baseClass} {isPublish ? activeClass : inactiveClass}">
+      <a href="/blog/{effectiveAddress}/publish" class="{baseClass} {isPublish ? activeClass : inactiveClass}">
         Publish
       </a>
     {:else}

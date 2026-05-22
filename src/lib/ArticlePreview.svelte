@@ -31,7 +31,7 @@
     marked.parse(content),
     address,
     item.name,
-    `/${address}/${item.name}`
+    `/blog/${address}/${item.name}`
   ) : '';
 </script>
 
@@ -57,7 +57,7 @@
     {/if}
   </div>
   
-  <a href="/{address}/{item.name}" class="inline-block bg-sky-700 text-white px-4 py-2 rounded hover:bg-sky-800 transition-colors">
+  <a href="/blog/{address}/{item.name}" class="inline-block bg-sky-700 text-white px-4 py-2 rounded hover:bg-sky-800 transition-colors">
     Read Full Article
   </a>
 </div>

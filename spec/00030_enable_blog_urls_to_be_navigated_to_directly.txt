@@ -1,0 +1,40 @@
+As a blog reader
+I want to be able to enter a full http://<IMIM2_HOST>/blog/<BLOG_ADDRESS> URL into the browser navigation bar
+So that it is easy to navigate directly from a browser bookmark or refresh the page from the browser
+
+Given that it is already possible to navigate to the IMIM2 welcome page (http://<IMIM2_HOST>) and enter an AntTP Address (<BLOG_ADDRESS>) then click 'Go to Blog' and see the blog on the 'browse' route
+When navigating directly to the full URL without going through the welcome page
+Then the 'browse' route should successfully active and download the blog article listing to browse through, without receiving 404 not found errors.
+
+Given that AntTP can read a route map in /app-conf.json to allow specific routes to be directed to /index.html
+When allowing direct navigation to a blog browse page
+Then add /app-config.json with the routeMap below
+And change all the IMIM2 routes to use http://<IMIM2_HOST>/blog/<BLOG_ADDRESS> instead of http://<IMIM2_HOST>/<BLOG_ADDRESS> to allow Javascript, CSS and other IMIM2 assets to still be routed correctly. 
+
+```
+{
+  "routeMap": {
+    "": "index.html",
+    "blog/*": "index.html",
+    "blog/*/**": "index.html"
+  }
+}
+```
+
+Given that when building IMIM2, the app-config.json must be added to the root of the build directory
+When updating the routes
+Then update the build script to copy app-config.json to the build root.
+
+Implementation Notes
+
+- Create a feature branch for this issue
+- Increment patch version in /package.json
+- Create a copy of this issue description and save to /spec using the name of this issue as the filename (with lower underscore case, starting with the 5 char padded issue number, e.g. 00030_issue_title.txt)
+- Unit test modules where applicable
+- It looks like the route resolver is currently being bypassed, causing the actual file to be looked up, rather than the route. As the file doesn't exist (it is only a route), a 404 is returned.
+
+Example error:
+
+```
+{"GetError":{"RecordNotFound":"File not found: http://ff7d949e6738e38fbd472fc0af29893e3a663bc9955ca0f6ffbc27f378841390/c9f7d82c093dcf47b3647a4a5b9ae64dfda038e5dabf3ff4f1f60ffaff870b5b/"}}
+```
