@@ -8,7 +8,7 @@ Then the 'browse' route should successfully active and download the blog article
 
 Given that AntTP can read a route map in /app-conf.json to allow specific routes to be directed to /index.html
 When allowing direct navigation to a blog browse page
-Then add /app-config.json with the routeMap below
+Then add /app-conf.json with the routeMap below
 And change all the IMIM2 routes to use http://<IMIM2_HOST>/blog/<BLOG_ADDRESS> instead of http://<IMIM2_HOST>/<BLOG_ADDRESS> to allow Javascript, CSS and other IMIM2 assets to still be routed correctly. 
 
 ```
@@ -21,9 +21,9 @@ And change all the IMIM2 routes to use http://<IMIM2_HOST>/blog/<BLOG_ADDRESS> i
 }
 ```
 
-Given that when building IMIM2, the app-config.json must be added to the root of the build directory
+Given that when building IMIM2, the app-conf.json must be added to the root of the build directory
 When updating the routes
-Then update the build script to copy app-config.json to the build root.
+Then update the build script to copy app-conf.json to the build root.
 
 Implementation Notes
 
